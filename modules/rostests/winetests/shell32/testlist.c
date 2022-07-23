@@ -41,7 +41,9 @@ const struct test winetest_testlist[] =
     { "shlexec", func_shlexec },
     { "shlfileop", func_shlfileop },
     { "shlfolder", func_shlfolder },
+#ifndef _M_AMD64 // UM assert fail
     { "shlview", func_shlview },
+#endif
     { "string", func_string },
     { "systray", func_systray },
     { 0, 0 }

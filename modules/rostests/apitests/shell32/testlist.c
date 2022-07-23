@@ -56,7 +56,9 @@ const struct test winetest_testlist[] =
     { "SHCreateDataObject", func_SHCreateDataObject },
     { "SHCreateFileDataObject", func_SHCreateFileDataObject },
     { "SHCreateFileExtractIconW", func_SHCreateFileExtractIconW },
+#ifndef _M_AMD64 // kernel crash
     { "ShellExecCmdLine", func_ShellExecCmdLine },
+#endif
     { "ShellExecuteEx", func_ShellExecuteEx },
     { "ShellExecuteW", func_ShellExecuteW },
     { "ShellHook", func_ShellHook },

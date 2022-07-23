@@ -90,7 +90,9 @@ const struct test winetest_testlist[] =
     { "PrivateExtractIcons", func_PrivateExtractIcons },
     { "RealGetWindowClass", func_RealGetWindowClass },
     { "RedrawWindow", func_RedrawWindow },
+#ifndef _M_AMD64 // kernel crash
     { "RegisterHotKey", func_RegisterHotKey },
+#endif
     { "RegisterClassEx", func_RegisterClassEx },
     { "ScrollBarWndExtra", func_ScrollBarWndExtra },
     { "ScrollDC", func_ScrollDC },

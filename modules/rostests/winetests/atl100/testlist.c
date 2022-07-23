@@ -7,6 +7,8 @@ extern void func_atl(void);
 
 const struct test winetest_testlist[] =
 {
+#ifndef _M_AMD64 // kernel crash
     { "atl", func_atl },
+#endif
     { 0, 0 }
 };

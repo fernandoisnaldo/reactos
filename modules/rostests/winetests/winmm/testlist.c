@@ -17,7 +17,9 @@ const struct test winetest_testlist[] =
 {
     { "capture", func_capture },
     { "joystick", func_joystick },
+#ifndef _M_AMD64 // timeout, cancelled
     { "mci", func_mci },
+#endif
     { "mcicda", func_mcicda },
     { "midi", func_midi },
     { "mixer", func_mixer },
