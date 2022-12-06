@@ -209,6 +209,7 @@ IntGetParent(PWND Wnd)
 {
    if (Wnd->style & WS_POPUP)
    {
+       ASSERT(Wnd->spwndParent == NULL || IntIsDesktopWindow(Wnd->spwndParent));
       return Wnd->spwndOwner;
    }
    else if (Wnd->style & WS_CHILD)
@@ -304,6 +305,33 @@ IntWinListChildren(PWND Window)
     List[Index] = NULL;
 
     return List;
+}
+
+BOOL
+FASTCALL
+IntCheckForOwnedPopups(
+    _In_ PWND pwnd)
+{
+    PWND pwndDesktop, pwndChild;
+    BOOL bFound = FALSE;
+
+    /* Get the desktop Window */
+    pwndDesktop = co_GetDesktopWindow(pwnd);
+    ASSERT(pwndDesktop != NULL);
+
+    /* Iterate over all desktop children */
+    for (pwndChild = pwndDesktop->spwndChild;
+         pwndChild != NULL;
+         pwndChild = pwndChild->spwndNext)
+    {
+        if (pwndChild->spwndOwner == pwnd)
+        {
+            bFound = TRUE;
+            break;
+        }
+    }
+
+    return bFound;
 }
 
 HWND* FASTCALL
@@ -493,7 +521,7 @@ static void IntSendDestroyMsg(HWND hWnd)
       }
 
       /* If the window being destroyed is currently tracked... */
-      if (ti->rpdesk->spwndTrack == Window)
+      if (ti->rpdesk && ti->rpdesk->spwndTrack == Window)
       {
           IntRemoveTrackMouseEvent(ti->rpdesk);
       }
@@ -578,6 +606,12 @@ LRESULT co_UserFreeWindow(PWND Window,
    BOOLEAN BelongsToThreadData;
 
    ASSERT(Window);
+
+   if (IntCheckForOwnedPopups(Window))
+   {
+       ERR("Trying to delete owning window.\n");
+       return 0;
+   }
 
    if(Window->state2 & WNDS2_INDESTROY)
    {
@@ -1121,6 +1155,7 @@ IntSetOwner(HWND hWnd, HWND hWndNewOwner)
    {
       if (WndNewOwner)
       {
+          ASSERT(Wnd->spwndParent == NULL || IntIsDesktopWindow(Wnd->spwndParent));
          Wnd->spwndOwner= WndNewOwner;
       }
       else
@@ -1870,6 +1905,7 @@ PWND FASTCALL IntCreateWindow(CREATESTRUCTW* Cs,
    /* Remember, pWnd->head is setup in object.c ... */
    pWnd->spwndParent = ParentWindow;
    pWnd->spwndOwner = OwnerWindow;
+   ASSERT(!OwnerWindow || pWnd->spwndParent == NULL || IntIsDesktopWindow(pWnd->spwndParent));
    pWnd->fnid = 0;
    pWnd->spwndLastActive = pWnd;
    // Ramp up compatible version sets.
@@ -2884,6 +2920,7 @@ BOOLEAN co_UserDestroyWindow(PVOID Object)
       {
          if (Window->spwndOwner)
          {
+             ASSERT(Window->spwndParent == NULL || IntIsDesktopWindow(Window->spwndParent));
             //ERR("DestroyWindow Owner out.\n");
             UserAttachThreadInput(Window->head.pti, Window->spwndOwner->head.pti, FALSE);
          }
