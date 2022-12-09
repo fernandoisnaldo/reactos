@@ -162,7 +162,7 @@ InitializeTestImage(
 
     TestImage->NtHeaders.Signature = IMAGE_NT_SIGNATURE;
 
-    TestImage->NtHeaders.FileHeader.Machine = IMAGE_FILE_MACHINE_I386;
+    TestImage->NtHeaders.FileHeader.Machine = IMAGE_FILE_MACHINE_NATIVE;
     TestImage->NtHeaders.FileHeader.NumberOfSections = 1;
     TestImage->NtHeaders.FileHeader.TimeDateStamp = 0;
     TestImage->NtHeaders.FileHeader.PointerToSymbolTable = 0;
@@ -170,7 +170,11 @@ InitializeTestImage(
     TestImage->NtHeaders.FileHeader.SizeOfOptionalHeader = sizeof(IMAGE_OPTIONAL_HEADER);
     TestImage->NtHeaders.FileHeader.Characteristics = 0;
 
+#ifdef _WIN64
+    TestImage->NtHeaders.OptionalHeader.Magic = IMAGE_NT_OPTIONAL_HDR64_MAGIC;
+#else
     TestImage->NtHeaders.OptionalHeader.Magic = IMAGE_NT_OPTIONAL_HDR32_MAGIC;
+#endif
     TestImage->NtHeaders.OptionalHeader.ImageBase = (DWORD_PTR)TestImage;
     TestImage->NtHeaders.OptionalHeader.SizeOfImage = sizeof(TEST_IMAGE);
     TestImage->NtHeaders.OptionalHeader.SizeOfHeaders = sizeof(IMAGE_DOS_HEADER) + sizeof(IMAGE_NT_HEADERS);
@@ -362,6 +366,7 @@ Test_Parameters(PTEST_IMAGE TestImage)
 START_TEST(LdrEnumResources)
 {
     TEST_IMAGE TestImage;
+    __debugbreak();
     RtlZeroMemory(&TestImage, sizeof(TestImage));
 
     Test_Parameters(&TestImage);
