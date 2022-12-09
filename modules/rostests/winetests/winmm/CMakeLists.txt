@@ -1,7 +1,6 @@
 
 list(APPEND SOURCE
     capture.c
-    generated.c
     joystick.c
     mci.c
     mcicda.c
@@ -11,6 +10,11 @@ list(APPEND SOURCE
     timer.c
     testlist.c
     wave.c)
+
+if(NOT ARCH STREQUAL "amd64")
+list(APPEND SOURCE
+    generated.c)
+endif()
 
 add_executable(winmm_winetest ${SOURCE})
 
