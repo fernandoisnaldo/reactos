@@ -131,7 +131,7 @@ const KMT_TEST TestList[] =
     { "KeTimer",                            Test_KeTimer },
     { "-KernelType",                        Test_KernelType },
     { "MmMdl",                              Test_MmMdl },
-//    { "MmSection",                          Test_MmSection }, // TestCreateSection
+    { "MmSection",                          Test_MmSection },
     { "MmReservedMapping",                  Test_MmReservedMapping },
     { "NpfsConnect",                        Test_NpfsConnect },
     { "NpfsCreate",                         Test_NpfsCreate },
@@ -163,7 +163,7 @@ const KMT_TEST TestList[] =
     { "SeLogonSession",                     Test_SeLogonSession },
     { "SeQueryInfoToken",                   Test_SeQueryInfoToken },
     { "SeTokenFiltering",                   Test_SeTokenFiltering },
-//    { "ZwAllocateVirtualMemory",            Test_ZwAllocateVirtualMemory }, // Crash in RtlpUnwindInternal
+    { "ZwAllocateVirtualMemory",            Test_ZwAllocateVirtualMemory },
     { "ZwCreateSection",                    Test_ZwCreateSection },
     { "ZwMapViewOfSection",                 Test_ZwMapViewOfSection },
     { "ZwWaitForMultipleObjects",           Test_ZwWaitForMultipleObjects},
