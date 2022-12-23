@@ -95,3 +95,6 @@ END
 #ifdef LANGUAGE_ZH_TW
     #include "lang/zh-TW.rc"
 #endif
+#ifdef LANGUAGE_PT_BR
+    #include "lang/pt-BR.rc"
+#endif
